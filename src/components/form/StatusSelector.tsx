@@ -16,7 +16,6 @@ export default function StatusSelector({ status, onStatusChange, darkMode = fals
             <Picker
                 selectedValue={status}
                 onValueChange={(itemValue) => onStatusChange(itemValue)}
-                style={styles.picker}
             >
                 <Picker.Item label="Active" value={TODO_STATUS.ACTIVE} />
                 <Picker.Item label="Completed" value={TODO_STATUS.COMPLETED} />
@@ -30,13 +29,7 @@ const getStyles = (darkMode: boolean) => StyleSheet.create({
     container: {
         marginBottom: 15,
         borderWidth: 1,
-        // borderColor: darkMode ? '#555' : '#ccc',
         borderRadius: 8,
         overflow: 'hidden',
-        // backgroundColor: darkMode ? '#2c2c2e' : '#fff',
-    },
-    picker: {
-        // backgroundColor: darkMode ? '#2c2c2e' : '#f0f0f0',
-        // color: darkMode ? '#fff' : '#000',
     },
 });

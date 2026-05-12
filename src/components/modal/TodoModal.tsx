@@ -24,6 +24,8 @@ export default function TodoModal({ visible, onClose, onSubmit, mode, initialDat
       animationIn="slideInUp"
       animationOut="slideOutDown"
       backdropOpacity={0.5}
+      avoidKeyboard={true}
+      hideModalContentWhileAnimating={true}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.modalContent}>

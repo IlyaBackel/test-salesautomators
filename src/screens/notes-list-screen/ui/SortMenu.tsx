@@ -58,7 +58,7 @@ export default function SortMenu() {
                 {SORT_OPTIONS.map((opt, idx) => (
                     <TouchableOpacity
                         key={opt.type}
-                        style={ styles.option }
+                        style={ styles.option}
                         onPress={() => handleSelect(opt.type)}
                     >
                         <Text style={styles.optionText}>
