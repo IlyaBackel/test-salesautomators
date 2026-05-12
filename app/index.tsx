@@ -1,7 +1,11 @@
 import { Text, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import RootNavigation from "../src/navigation/RootNavigation";
+
 
 export default function Index() {
   return (
+    <SafeAreaProvider>
     <View
       style={{
         flex: 1,
@@ -10,6 +14,8 @@ export default function Index() {
       }}
     >
       <Text>Edit app/index.tsx to edit this screen.</Text>
+      <RootNavigation />
     </View>
+    </SafeAreaProvider>
   );
 }
