@@ -1,8 +1,8 @@
-import TodoModal from '@/src/components/modal/TodoModal';
-import TodoInfo from '@/src/components/todo/TodoInfo';
-import { COLORS } from '@/src/constants/colors';
+import { deleteTodo, editTodo } from '@/src/entities/todo/model/todoSlice';
+import { TodoModal } from '@/src/features';
+import { COLORS } from '@/src/shared/theme/colors';
 import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
-import { deleteTodo, editTodo } from '@/src/store/slices/todoSlice';
+import { TodoInfo } from '@/src/widgets';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';

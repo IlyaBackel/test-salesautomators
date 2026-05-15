@@ -1,4 +1,4 @@
-import { COLORS } from '@/src/constants/colors';
+import { COLORS } from '@/src/shared/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';

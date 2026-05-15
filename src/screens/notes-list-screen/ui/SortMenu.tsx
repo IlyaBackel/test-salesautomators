@@ -1,7 +1,7 @@
-import { COLORS } from '@/src/constants/colors';
-import { ACTIVE_SORT } from '@/src/constants/todo-constants';
-import { setSort } from '@/src/store/slices/sortSlice';
-import { ActiveSort } from '@/src/types/todoItem';
+import { setSort } from '@/src/entities/sort/model/sortSlice';
+import { ActiveSort } from '@/src/entities/todo/model/ITodo';
+import { ACTIVE_SORT } from '@/src/entities/todo/model/todo-constants';
+import { COLORS } from '@/src/shared/theme/colors';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';

@@ -1,8 +1,9 @@
+import todoReducer from '@/src/entities/todo/model/todoSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
-import sortReducer from './slices/sortSlice';
-import todoReducer from './slices/todoSlice';
+import sortReducer from '../entities/sort/model/sortSlice';
+
 
 const rootReducer = combineReducers({
     todos: todoReducer,

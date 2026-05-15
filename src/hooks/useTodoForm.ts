@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
-import { TODO_STATUS } from '../constants/todo-constants';
-import { ITodo } from '../types/todoItem';
-import { todoCreateSchema, todoEditSchema } from '../utils/todoValidation';
+import { todoCreateSchema, todoEditSchema } from '../entities/todo/lib/todoValidation';
+import { ITodo } from '../entities/todo/model/ITodo';
+import { TODO_STATUS } from '../entities/todo/model/todo-constants';
 
 interface UseTodoFormProps {
   initialData?: Partial<ITodo>;
