@@ -1,7 +1,6 @@
-
+import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { ITodo } from '@/src/entities/todo/model/ITodo';
 import { formatExecutionDateTime } from '@/src/shared/lib/date';
-import { COLORS } from '@/src/shared/theme/colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -15,23 +14,45 @@ interface TodoItemProps {
 }
 
 export default function TodoItem({ todo, onPress, onToggleStatus, onDelete }: TodoItemProps) {
-    const cardBgColor = getCardBackgroundColor(todo.status);
+    const { colors } = useTheme();
+
+    const cardBgColor = getCardBackgroundColor(todo.status, colors);
+    const statusBgColor = getStatusColor(todo.status, colors);
+
+    const dynamicStyles = {
+        card: {
+            backgroundColor: cardBgColor,
+            borderColor: colors.BORDER,
+        },
+        title: {
+            color: colors.TEXT.PRIMARY,
+        },
+        dateTime: {
+            color: colors.TEXT.SECONDARY,
+        },
+        statusBadge: {
+            backgroundColor: statusBgColor,
+        },
+        statusText: {
+            color: colors.TEXT.TODO_TEXT,
+        },
+    };
 
     return (
-        <TouchableOpacity style={[styles.card, { backgroundColor: cardBgColor }]}  onPress={() => onPress(todo.id)}>
+        <TouchableOpacity style={[styles.card, dynamicStyles.card]} onPress={() => onPress(todo.id)}>
             <View style={styles.cardHeader}>
-                <Text style={styles.title}>{todo.title}</Text>
-                <Text style={styles.dateTime}>{formatExecutionDateTime(todo.executionDateTime)}</Text>
+                <Text style={[styles.title, dynamicStyles.title]}>{todo.title}</Text>
+                <Text style={[styles.dateTime, dynamicStyles.dateTime]}>{formatExecutionDateTime(todo.executionDateTime)}</Text>
             </View>
             <View style={styles.cardFooter}>
                 <TouchableOpacity
                     onPress={() => onToggleStatus(todo.id, todo.status)}
-                    style={[styles.statusBadge, { backgroundColor: getStatusColor(todo.status) }]}
+                    style={[styles.statusBadge, dynamicStyles.statusBadge]}
                 >
-                    <Text style={styles.statusText}>{getStatusLabel(todo.status)}</Text>
+                    <Text style={[styles.statusText, dynamicStyles.statusText]}>{getStatusLabel(todo.status)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => onDelete(todo.id)} style={styles.deleteBtn}>
-                     <Ionicons name="trash-outline" size={22} color={COLORS.BUTTON.DELETE} />
+                    <Ionicons name="trash-outline" size={22} color={colors.BUTTON.DELETE} />
                 </TouchableOpacity>
             </View>
         </TouchableOpacity>
@@ -40,8 +61,7 @@ export default function TodoItem({ todo, onPress, onToggleStatus, onDelete }: To
 
 const styles = StyleSheet.create({
     card: {
-        flexDirection: 'row',       
-        backgroundColor: COLORS.BACKGROUND.TODO,
+        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
@@ -53,32 +73,29 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 2,
         borderWidth: 1,
-        borderColor: '#ccc',
-        boxShadow: '0 0 10px rgba(0,0,0,0.2)',
     },
     cardHeader: {
-        flex: 1,                   
+        flex: 1,
         flexDirection: 'column',
         alignItems: 'flex-start',
-        marginRight: 12,         
+        marginRight: 12,
     },
     cardFooter: {
-        flexDirection: 'row',          
-        justifyContent: 'space-between', 
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        flexShrink: 0,  
+        flexShrink: 0,
     },
     title: {
         fontSize: 18,
         fontWeight: '600',
         width: '80%',
-        marginBottom: 4, 
-        flexWrap: 'wrap',             
+        marginBottom: 4,
+        flexWrap: 'wrap',
     },
     dateTime: {
         fontSize: 14,
-        color: '#666',
-        flexWrap: 'wrap',  
+        flexWrap: 'wrap',
     },
     statusBadge: {
         paddingHorizontal: 10,
@@ -86,14 +103,10 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     statusText: {
-        color: COLORS.TEXT.TODO_TEXT,
         fontSize: 12,
         fontWeight: 'bold',
     },
     deleteBtn: {
-        padding: 4,                   
-    },
-    deleteText: {
-        fontSize: 20,
+        padding: 4,
     },
 });

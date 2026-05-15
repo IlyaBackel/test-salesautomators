@@ -1,7 +1,7 @@
+import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { setSort } from '@/src/entities/sort/model/sortSlice';
 import { ActiveSort } from '@/src/entities/todo/model/ITodo';
 import { ACTIVE_SORT } from '@/src/entities/todo/model/todo-constants';
-import { COLORS } from '@/src/shared/theme/colors';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
@@ -18,6 +18,7 @@ export default function SortMenu() {
     const direction = useAppSelector(s => s.sort.directionOfSort);
     const [open, setOpen] = useState(false);
     const animation = useRef(new Animated.Value(0)).current;
+    const { colors } = useTheme(); 
 
     useEffect(() => {
         Animated.timing(animation, {
@@ -49,19 +50,19 @@ export default function SortMenu() {
     return (
         <View style={styles.container}>
             <Animated.View style={{ transform: [{ rotate }] }}>
-                <TouchableOpacity onPress={() => setOpen(v => !v)} style={styles.iconButton}>
-                    <Text style={styles.iconText}>{open ? '✕' : '☰'}</Text>
+                <TouchableOpacity onPress={() => setOpen(v => !v)} style={[styles.iconButton, { backgroundColor: colors.BUTTON.PRIMARY }]}>
+                    <Text style={[styles.iconText, { color: colors.TEXT.HEADER_TEXT }]}>{open ? '✕' : '☰'}</Text>
                 </TouchableOpacity>
             </Animated.View>
 
-            <Animated.View style={[styles.menu, menuStyle]}>
-                {SORT_OPTIONS.map((opt, idx) => (
+            <Animated.View style={[styles.menu, menuStyle, { backgroundColor: colors.BACKGROUND.CARD, borderColor: colors.BORDER }]}>
+                {SORT_OPTIONS.map((opt) => (
                     <TouchableOpacity
                         key={opt.type}
-                        style={ styles.option}
+                        style={[styles.option, { borderBottomColor: colors.BORDER }]}
                         onPress={() => handleSelect(opt.type)}
                     >
-                        <Text style={styles.optionText}>
+                        <Text style={[styles.optionText, { color: colors.TEXT.PRIMARY }]}>
                             {opt.label}{getArrow(opt.type)}
                         </Text>
                     </TouchableOpacity>
@@ -69,18 +70,17 @@ export default function SortMenu() {
             </Animated.View>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
         alignItems: 'flex-end',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     iconButton: {
         width: 60,
         height: 60,
-        borderRadius: "50%",
-        backgroundColor: COLORS.BUTTON.PRIMARY,
+        borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#494949',
@@ -91,8 +91,7 @@ const styles = StyleSheet.create({
     },
     iconText: {
         fontSize: 22,
-        color: COLORS.TEXT.HEADER_TEXT,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     menu: {
         position: 'absolute',
@@ -108,18 +107,16 @@ const styles = StyleSheet.create({
         elevation: 8,
         zIndex: 10,
         gap: 2,
+        borderWidth: 1,
     },
     option: {
         paddingVertical: 12,
         paddingHorizontal: 18,
-        backgroundColor: 'rgba(202, 202, 202, 0.9)',
         alignItems: 'center',
-        borderWidth: 0.5,
-        borderColor: 'rgba(175, 175, 175, 0.9)',
+        borderBottomWidth: 0.5,
     },
     optionText: {
         fontSize: 17,
         fontWeight: '500',
-        color: COLORS.TEXT.PRIMARY,
     },
 });

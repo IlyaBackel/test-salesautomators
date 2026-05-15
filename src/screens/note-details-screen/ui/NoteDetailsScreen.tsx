@@ -1,6 +1,6 @@
+import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { deleteTodo, editTodo } from '@/src/entities/todo/model/todoSlice';
 import { TodoModal } from '@/src/features';
-import { COLORS } from '@/src/shared/theme/colors';
 import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
 import { TodoInfo } from '@/src/widgets';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function NoteDetailsScreen() {
+    const { colors } = useTheme(); 
     const route = useRoute();
     const navigation = useNavigation();
     const dispatch = useAppDispatch();
@@ -17,8 +18,8 @@ export default function NoteDetailsScreen() {
 
     if (!todo) {
         return (
-            <View style={styles.container}>
-                <Text>Task not found</Text>
+            <View style={[styles.container, { backgroundColor: colors.BACKGROUND.PRIMARY }]}>
+                <Text style={{ color: colors.TEXT.PRIMARY }}>Task not found</Text>
             </View>
         );
     }
@@ -48,15 +49,21 @@ export default function NoteDetailsScreen() {
         ]);
     };
 
+    const dynamicStyles = {
+        editButton: { backgroundColor: colors.BUTTON.PRIMARY },
+        deleteButton: { backgroundColor: colors.BUTTON.DELETE },
+        deleteButtonText: { color: colors.TEXT.PRIMARY },
+    };
+
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={[styles.container, { backgroundColor: colors.BACKGROUND.PRIMARY }]}>
             <TodoInfo todo={todo} />
             <View style={styles.buttonsRow}>
-                <TouchableOpacity style={styles.editButton} onPress={() => setModalVisible(true)}>
+                <TouchableOpacity style={[styles.editButton, dynamicStyles.editButton]} onPress={() => setModalVisible(true)}>
                     <Text style={styles.editButtonText}>Edit</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                    <Text style={styles.deleteButtonText}>Delete</Text>
+                <TouchableOpacity style={[styles.deleteButton, dynamicStyles.deleteButton]} onPress={handleDelete}>
+                    <Text style={[styles.deleteButtonText, dynamicStyles.deleteButtonText]}>Delete</Text>
                 </TouchableOpacity>
             </View>
 
@@ -74,7 +81,6 @@ export default function NoteDetailsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.BACKGROUND.PRIMARY,
     },
     buttonsRow: {
         flexDirection: 'row',
@@ -85,7 +91,6 @@ const styles = StyleSheet.create({
     },
     editButton: {
         flex: 1,
-        backgroundColor: COLORS.BUTTON.PRIMARY,
         padding: 12,
         borderRadius: 8,
         marginRight: 8,
@@ -97,14 +102,12 @@ const styles = StyleSheet.create({
     },
     deleteButton: {
         flex: 1,
-        backgroundColor: COLORS.BUTTON.DELETE,
         padding: 12,
         borderRadius: 8,
         marginLeft: 8,
         alignItems: 'center',
     },
     deleteButtonText: {
-        color: COLORS.TEXT.PRIMARY,
         fontWeight: 'bold',
     },
 });

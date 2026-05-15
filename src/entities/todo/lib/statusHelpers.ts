@@ -1,8 +1,6 @@
-import { COLORS } from '../../../shared/theme/colors';
-import { ITodo } from '../model/ITodo';
+import { lightColors } from '@/src/shared/theme/colors';
 import { TODO_STATUS } from '../model/todo-constants';
 
-//получение цвета и текста для статуса и фона карточки
 export const getStatusLabel = (status: TODO_STATUS): string => {
   switch (status) {
     case TODO_STATUS.ACTIVE: return 'Active';
@@ -12,22 +10,19 @@ export const getStatusLabel = (status: TODO_STATUS): string => {
   }
 };
 
-export const getStatusColor = (status: TODO_STATUS): string => {
+export const getStatusColor = (status: TODO_STATUS, colors: typeof lightColors): string => {
   switch (status) {
-    case TODO_STATUS.ACTIVE: return COLORS.BUTTON.ACTIVE;
-    case TODO_STATUS.COMPLETED: return COLORS.BUTTON.COMPLETED;
-    case TODO_STATUS.CANCELLED: return COLORS.BUTTON.DELETE;
-    default: return COLORS.BUTTON.DEFAULT;
+    case TODO_STATUS.ACTIVE: return colors.STATUS.ACTIVE;
+    case TODO_STATUS.COMPLETED: return colors.STATUS.COMPLETED;
+    case TODO_STATUS.CANCELLED: return colors.STATUS.CANCELLED;
+    default: return colors.BUTTON.DEFAULT;
   }
 };
 
-export const getCardBackgroundColor = (status: ITodo['status']): string => {
-    switch (status) {
-        case 'active':
-            return COLORS.BACKGROUND.TODO_ACTIVE;
-        case 'completed':
-            return COLORS.BACKGROUND.TODO_COMPLETED;
-        default:
-            return COLORS.BACKGROUND.TODO_DEFAULT;
-    }
+export const getCardBackgroundColor = (status: TODO_STATUS, colors: typeof lightColors): string => {
+  switch (status) {
+    case TODO_STATUS.ACTIVE: return colors.BACKGROUND.TODO_ACTIVE;
+    case TODO_STATUS.COMPLETED: return colors.BACKGROUND.TODO_COMPLETED;
+    default: return colors.BACKGROUND.TODO_DEFAULT;
+  }
 };

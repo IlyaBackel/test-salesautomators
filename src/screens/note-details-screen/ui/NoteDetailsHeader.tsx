@@ -1,4 +1,4 @@
-import { COLORS } from '@/src/shared/theme/colors';
+import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
@@ -8,16 +8,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function NoteDetailsHeader({ title }: { title?: string }) {
     const insets = useSafeAreaInsets();
     const navigation = useNavigation();
+    const { colors } = useTheme(); 
 
     return (
-        <View style={[styles.container, { paddingTop: insets.top }]}>
+        <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.BACKGROUND.HEADER, borderColor: colors.BORDER }]}>
             <TouchableOpacity 
                 style={styles.backButton} 
                 onPress={() => navigation.goBack()}
             >
-                <Ionicons name="arrow-back" size={24} color="black" />
+                <Ionicons name="arrow-back" size={24} color={colors.TEXT.PRIMARY} />
             </TouchableOpacity>
-            <Text style={styles.title} numberOfLines={1}>
+            <Text style={[styles.title, { color: colors.TEXT.PRIMARY }]} numberOfLines={1}>
                 {title || 'Todo Info'}
             </Text>
             <View style={styles.rightPlaceholder} />
@@ -34,8 +35,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 12,
         borderWidth: 1,
-        borderColor: '#ccc',
-        backgroundColor: COLORS.BACKGROUND.HEADER,
     },
     backButton: {
         width: 60,
@@ -46,7 +45,6 @@ const styles = StyleSheet.create({
         fontSize: 25,
         textAlign: 'center',
         flex: 1,
-        color: COLORS.TEXT.PRIMARY,
     },
     rightPlaceholder: {
         width: 40,

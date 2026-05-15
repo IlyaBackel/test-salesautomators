@@ -1,8 +1,8 @@
+import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { selectActiveSort, selectDirectionOfSort } from '@/src/entities/sort/model/sortSlice';
 import { sortTodos } from '@/src/entities/todo/lib/sorts';
 import { TODO_STATUS } from '@/src/entities/todo/model/todo-constants';
 import { TodoModal } from '@/src/features';
-import { COLORS } from '@/src/shared/theme/colors';
 import { RootStackParamList } from '@/src/shared/types/types';
 import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
 import { TodoList } from '@/src/widgets';
@@ -19,6 +19,7 @@ export default function NoteListScreen() {
     const activeSort = useAppSelector(selectActiveSort);
     const direction = useAppSelector(selectDirectionOfSort);
     const [modalVisible, setModalVisible] = useState(false);
+    const { colors } = useTheme(); 
 
     type NavigationProp = StackNavigationProp<RootStackParamList, 'Todo List'>;
     const navigation = useNavigation<NavigationProp>();
@@ -50,14 +51,14 @@ export default function NoteListScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: colors.BACKGROUND.PRIMARY }]}>
             <TodoList
                 todos={sortedTodos}
                 onItemPress={handleItemPress}
                 onToggleStatus={handleToggleStatus}
                 onDelete={(id) => dispatch(deleteTodo(id))}
             />
-            <TouchableOpacity style={styles.fab} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity style={[styles.fab, { backgroundColor: colors.BUTTON.PRIMARY }]} onPress={() => setModalVisible(true)}>
                 <Text style={styles.fabText}>+</Text>
             </TouchableOpacity>
 
@@ -74,7 +75,6 @@ export default function NoteListScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.BACKGROUND.PRIMARY
     },
     fab: {
         position: 'absolute',
@@ -82,8 +82,7 @@ const styles = StyleSheet.create({
         right: 24,
         width: 60,
         height: 60,
-        borderRadius: "50%",
-        backgroundColor: COLORS.BUTTON.PRIMARY,
+        borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,
@@ -95,6 +94,6 @@ const styles = StyleSheet.create({
     fabText: {
         fontSize: 28,
         color: '#fff',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
 });

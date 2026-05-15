@@ -3,15 +3,18 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "../store";
 import RootNavigation from "./navigation/RootNavigation";
+import { ThemeProvider } from "./providers/ThemeProvider";
 
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <ThemeProvider>
             <RootNavigation />
-          </PersistGate>
-        </Provider>
+          </ThemeProvider>
+        </PersistGate>
+      </Provider>
     </SafeAreaProvider>
   )
 }

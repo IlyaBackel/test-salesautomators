@@ -1,3 +1,4 @@
+import { useTheme } from '@/src/app/providers/ThemeProvider';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function DateTimePickerButton({ label, value, mode, onChange, minimumDate }: Props) {
+    const { colors } = useTheme();
     const [showPicker, setShowPicker] = useState(false);
 
     const handleChange = (event: any, selectedDate?: Date) => {
@@ -27,8 +29,8 @@ export default function DateTimePickerButton({ label, value, mode, onChange, min
     if (Platform.OS === 'ios') {
         return (
             <View style={styles.iosContainer}>
-                <Text style={styles.label}>{label}</Text>
-                <View style={styles.pickerWrapper}>
+                <Text style={[styles.label, { color: colors.TEXT.PRIMARY }]}>{label}</Text>
+                <View style={[styles.pickerWrapper, { borderColor: colors.BORDER }]}>
                     <DateTimePicker
                         value={value}
                         mode={mode}
@@ -42,8 +44,11 @@ export default function DateTimePickerButton({ label, value, mode, onChange, min
 
     return (
         <>
-            <TouchableOpacity style={styles.androidButton} onPress={() => setShowPicker(true)}>
-                <Text>{label}: {formattedValue}</Text>
+            <TouchableOpacity
+                style={[styles.androidButton, { borderColor: colors.BORDER, backgroundColor: colors.BACKGROUND.CARD }]}
+                onPress={() => setShowPicker(true)}
+            >
+                <Text style={{ color: colors.TEXT.PRIMARY }}>{label}: {formattedValue}</Text>
             </TouchableOpacity>
             {showPicker && (
                 <DateTimePicker
@@ -51,7 +56,7 @@ export default function DateTimePickerButton({ label, value, mode, onChange, min
                     mode={mode}
                     onChange={handleChange}
                     minimumDate={mode === 'date' ? minimumDate : undefined}
-                    display="spinner" 
+                    display="spinner"
                 />
             )}
         </>
@@ -72,14 +77,12 @@ const styles = StyleSheet.create({
     },
     pickerWrapper: {
         borderWidth: 1,
-        borderColor: '#7c7b7bff',
         borderRadius: 8,
         alignItems: 'center',
     },
     androidButton: {
         padding: 12,
         borderWidth: 1,
-        borderColor: '#ccc',
         borderRadius: 8,
         marginBottom: 15,
     },

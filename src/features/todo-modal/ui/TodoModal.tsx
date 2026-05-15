@@ -1,5 +1,5 @@
+import { useTheme } from '@/src/app/providers/ThemeProvider'; // <-- хук темы
 import { ITodo } from '@/src/entities/todo/model/ITodo';
-import { COLORS } from '@/src/shared/theme/colors';
 import React from 'react';
 import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import Modal from 'react-native-modal';
@@ -10,10 +10,18 @@ interface TodoModalProps {
   onClose: () => void;
   onSubmit: (data: any) => void;
   mode: 'create' | 'edit';
-  initialData?: ITodo; 
+  initialData?: ITodo;
 }
 
 export default function TodoModal({ visible, onClose, onSubmit, mode, initialData }: TodoModalProps) {
+  const { colors } = useTheme(); 
+
+  const dynamicStyles = {
+    modalContent: {
+      backgroundColor: colors.BACKGROUND.MODAL, 
+    },
+  };
+
   return (
     <Modal
       isVisible={visible}
@@ -28,12 +36,12 @@ export default function TodoModal({ visible, onClose, onSubmit, mode, initialDat
       hideModalContentWhileAnimating={true}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.modalContent}>
-          <TodoForm 
-            mode={mode} 
-            initialData={initialData} 
-            onSubmit={onSubmit} 
-            onClose={onClose} 
+        <View style={[styles.modalContent, dynamicStyles.modalContent]}>
+          <TodoForm
+            mode={mode}
+            initialData={initialData}
+            onSubmit={onSubmit}
+            onClose={onClose}
           />
         </View>
       </TouchableWithoutFeedback>
@@ -47,7 +55,6 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   modalContent: {
-    backgroundColor: COLORS.BACKGROUND.PRIMARY,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,

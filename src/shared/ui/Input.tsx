@@ -1,3 +1,4 @@
+import { useTheme } from '@/src/app/providers/ThemeProvider';
 import React from 'react';
 import { StyleProp, StyleSheet, TextInput, TextInputProps, TextStyle } from 'react-native';
 
@@ -10,11 +11,21 @@ interface InputProps extends Omit<TextInputProps, 'style'> {
 }
 
 export default function Input({ value, placeholder, onChangeText, style, multiline = false, ...restProps }: InputProps) {
+    const { colors } = useTheme();
+
     return (
         <TextInput
-            style={[styles.input, multiline && styles.textArea, style]}
+            style={[
+                styles.input,
+                multiline && styles.textArea,
+                {
+                    borderColor: colors.BORDER,
+                    color: colors.TEXT.PRIMARY,
+                },
+                style,
+            ]}
             placeholder={placeholder}
-            placeholderTextColor="#5a5858ff"
+            placeholderTextColor={colors.TEXT.PLACEHOLDER}
             value={value}
             onChangeText={onChangeText}
             multiline={multiline}
@@ -26,7 +37,6 @@ export default function Input({ value, placeholder, onChangeText, style, multili
 const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
-        borderColor: '#ccc',
         borderRadius: 8,
         padding: 10,
         marginBottom: 15,

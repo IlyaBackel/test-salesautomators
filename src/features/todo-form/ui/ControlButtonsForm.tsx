@@ -1,4 +1,4 @@
-import { COLORS } from '@/src/shared/theme/colors';
+import { useTheme } from '@/src/app/providers/ThemeProvider';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -9,12 +9,20 @@ interface IControlButtonsForm {
 }
 
 export default function ControlButtonsForm({ onClose, onSubmit, mode }: IControlButtonsForm) {
+    const { colors } = useTheme();
+
     return (
         <View style={styles.buttonsRow}>
-            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-                <Text>Cancel</Text>
+            <TouchableOpacity
+                style={[styles.cancelButton, { borderColor: colors.BORDER }]}
+                onPress={onClose}
+            >
+                <Text style={{ color: colors.TEXT.PRIMARY }}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.submitButton} onPress={onSubmit}>
+            <TouchableOpacity
+                style={[styles.submitButton, { backgroundColor: colors.BUTTON.PRIMARY }]}
+                onPress={onSubmit}
+            >
                 <Text style={styles.submitText}>{mode === 'create' ? 'Create' : 'Save'}</Text>
             </TouchableOpacity>
         </View>
@@ -26,25 +34,23 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 20,
-      },
-      cancelButton: {
+    },
+    cancelButton: {
         flex: 1,
         padding: 12,
         alignItems: 'center',
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: '#ccc',
         marginRight: 10,
-      },
-      submitButton: {
+    },
+    submitButton: {
         flex: 1,
         padding: 12,
         alignItems: 'center',
         borderRadius: 8,
-        backgroundColor: COLORS.BUTTON.PRIMARY,
-      },
-      submitText: {
+    },
+    submitText: {
         color: '#fff',
         fontWeight: 'bold',
-      },
-})
+    },
+});
