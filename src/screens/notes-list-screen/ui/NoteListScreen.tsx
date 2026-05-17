@@ -19,7 +19,7 @@ export default function NoteListScreen() {
     const activeSort = useAppSelector(selectActiveSort);
     const direction = useAppSelector(selectDirectionOfSort);
     const [modalVisible, setModalVisible] = useState(false);
-    const { colors } = useTheme(); 
+    const { colors } = useTheme();
 
     type NavigationProp = StackNavigationProp<RootStackParamList, 'Todo List'>;
     const navigation = useNavigation<NavigationProp>();
@@ -27,15 +27,16 @@ export default function NoteListScreen() {
     const sortedTodos = sortTodos(todos, activeSort, direction);
 
     const handleCreate = (data: any) => {
-        dispatch(
-            addTodo({
-                id: Date.now().toString(),
-                title: data.title,
-                description: data.description,
-                location: data.location,
-                executionDateTime: data.executionDateTime,
-            })
-        );
+        dispatch(addTodo({
+            id: Date.now().toString(),
+            title: data.title,
+            description: data.description,
+            manualLocation: data.manualLocation,
+            mapLocation: data.mapLocation,
+            latitude: data.latitude,
+            longitude: data.longitude,
+            executionDateTime: data.executionDateTime,
+        }));
     };
 
     const handleToggleStatus = (id: string, currentStatus: TODO_STATUS) => {

@@ -1,5 +1,7 @@
 import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { HistoryScreen, HistoryScreenHeader } from '@/src/screens/history-screen';
+import { MapScreenHeader } from '@/src/screens/map-screen';
+import MapScreen from '@/src/screens/map-screen/ui/MapScreen';
 import { NoteListHeader, NoteListScreen } from '@/src/screens/notes-list-screen';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -60,6 +62,17 @@ export default function RootNavigation() {
                     tabBarIcon: ({ focused, color, size }) => (
                         <Ionicons name={focused ? 'list' : 'list-outline'} size={size} color={color} />
                     ),
+                }}
+            />
+            <Tab.Screen
+                name="Map"
+                component={MapScreen}
+                options={{
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Ionicons name={focused ? 'map' : 'map-outline'} size={size} color={color} />
+                    ),
+                    headerShown: true,
+                    header: (props) => <MapScreenHeader />,
                 }}
             />
             <Tab.Screen

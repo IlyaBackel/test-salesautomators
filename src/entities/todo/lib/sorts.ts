@@ -8,8 +8,8 @@ export const sortTodos = (todos: ITodo[], sort: ActiveSort, direction: Direction
   switch (sort) {
     case "byDate":
       sortedTodos.sort((a, b) => {
-        const dateA = new Date(a.executionDateTime).getTime();
-        const dateB = new Date(b.executionDateTime).getTime();
+        const dateA = new Date(a.creationDate).getTime();
+        const dateB = new Date(b.creationDate).getTime();
         return direction === "decr" ? dateB - dateA : dateA - dateB;
       });
       break;
@@ -21,7 +21,7 @@ export const sortTodos = (todos: ITodo[], sort: ActiveSort, direction: Direction
       });
       break;
 
-    case "byStatus": //сортирует так, чтобы отмененные задачи были всегда в конце
+    case "byStatus": 
       {
         const statusOrderDecr = {
           [TODO_STATUS.COMPLETED]: 1, 

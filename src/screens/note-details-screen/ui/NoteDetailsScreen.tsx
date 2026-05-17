@@ -8,7 +8,7 @@ import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 
 export default function NoteDetailsScreen() {
-    const { colors } = useTheme(); 
+    const { colors } = useTheme();
     const route = useRoute();
     const navigation = useNavigation();
     const dispatch = useAppDispatch();
@@ -25,15 +25,18 @@ export default function NoteDetailsScreen() {
     }
 
     const handleUpdate = (data: any) => {
-        dispatch(editTodo({
-            id: noteId,
-            title: data.title,
-            description: data.description,
-            location: data.location,
-            status: data.status,
-            executionDateTime: data.executionDateTime,
-        }));
-    };
+  dispatch(editTodo({
+    id: noteId,
+    title: data.title,
+    description: data.description,
+    manualLocation: data.manualLocation,
+    mapLocation: data.mapLocation,
+    latitude: data.latitude,
+    longitude: data.longitude,
+    status: data.status,
+    executionDateTime: data.executionDateTime,
+  }));
+};
 
     const handleDelete = () => {
         Alert.alert('Delete task?', 'This action cannot be undone', [

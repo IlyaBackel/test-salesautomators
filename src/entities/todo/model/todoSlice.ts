@@ -1,5 +1,5 @@
-import { ITodo } from '@/src/entities/todo/model/ITodo';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ITodo } from './ITodo';
 import { TODO_STATUS } from './todo-constants';
 
 interface TodosState {
@@ -14,7 +14,6 @@ const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-
     addTodo: (state, action: PayloadAction<Omit<ITodo, 'creationDate' | 'status'>>) => {
       const newTodo: ITodo = {
         ...action.payload,
@@ -23,16 +22,17 @@ const todosSlice = createSlice({
       };
       state.items.unshift(newTodo);
     },
-
     deleteTodo: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter(todo => todo.id !== action.payload);
     },
-
     editTodo: (state, action: PayloadAction<{
       id: string;
       title: string;
       description?: string;
-      location?: string;
+      manualLocation?: string;    
+      mapLocation?: string;       
+      latitude?: number;
+      longitude?: number;
       status: TODO_STATUS;
       executionDateTime: number;
     }>) => {
@@ -42,7 +42,6 @@ const todosSlice = createSlice({
         Object.assign(todo, updates);
       }
     },
-
     changeStatus: (state, action: PayloadAction<{ id: string; status: TODO_STATUS }>) => {
       const todo = state.items.find(todo => todo.id === action.payload.id);
       if (todo) {

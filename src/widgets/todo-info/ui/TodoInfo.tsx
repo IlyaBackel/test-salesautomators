@@ -26,10 +26,19 @@ export default function TodoInfo({ todo }: TodoInfoProps) {
                 </>
             )}
 
-            {todo.location && (
+            {/* Ручное местоположение */}
+            {todo.manualLocation && (
                 <>
-                    <Text style={[styles.label, { color: colors.TEXT.PRIMARY }]}>Location</Text>
-                    <Text style={[styles.value, { color: colors.TEXT.SECONDARY }]}>{todo.location}</Text>
+                    <Text style={[styles.label, { color: colors.TEXT.PRIMARY }]}>Manual location</Text>
+                    <Text style={[styles.value, { color: colors.TEXT.SECONDARY }]}>{todo.manualLocation}</Text>
+                </>
+            )}
+
+            {/* Местоположение с карты */}
+            {todo.mapLocation && (
+                <>
+                    <Text style={[styles.label, { color: colors.TEXT.PRIMARY }]}>Location from map</Text>
+                    <Text style={[styles.value, { color: colors.TEXT.SECONDARY }]}>{todo.mapLocation}</Text>
                 </>
             )}
 

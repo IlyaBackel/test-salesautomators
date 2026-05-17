@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { Alert } from 'react-native';
-import { todoCreateSchema, todoEditSchema } from '../entities/todo/lib/todoValidation';
-import { ITodo } from '../entities/todo/model/ITodo';
-import { TODO_STATUS } from '../entities/todo/model/todo-constants';
+import { todoCreateSchema, todoEditSchema } from '../../../entities/todo/lib/todoValidation';
+import { ITodo } from '../../../entities/todo/model/ITodo';
+import { TODO_STATUS } from '../../../entities/todo/model/todo-constants';
 
 interface UseTodoFormProps {
   initialData?: Partial<ITodo>;
@@ -14,7 +14,12 @@ interface UseTodoFormProps {
 export function useTodoForm({ initialData, mode, onSubmit, onClose }: UseTodoFormProps) {
   const [title, setTitle] = useState(initialData?.title || '');
   const [description, setDescription] = useState(initialData?.description || '');
-  const [location, setLocation] = useState(initialData?.location || '');
+  const [manualLocation, setManualLocation] = useState(initialData?.manualLocation || '');
+const [mapLocation, setMapLocation] = useState(initialData?.mapLocation || '');
+const [mapCoords, setMapCoords] = useState({
+  lat: initialData?.latitude,
+  lng: initialData?.longitude,
+});
   const [executionDate, setExecutionDate] = useState(
     initialData?.executionDateTime ? new Date(initialData.executionDateTime) : new Date()
   );
@@ -22,7 +27,7 @@ export function useTodoForm({ initialData, mode, onSubmit, onClose }: UseTodoFor
     initialData?.executionDateTime ? new Date(initialData.executionDateTime) : new Date()
   );
   const [status, setStatus] = useState<TODO_STATUS>(
-    (initialData?.status as TODO_STATUS) || TODO_STATUS.ACTIVE 
+    (initialData?.status as TODO_STATUS) || TODO_STATUS.ACTIVE
   );
 
   const onDateChange = useCallback((event: any, selectedDate?: Date) => {
@@ -66,10 +71,11 @@ export function useTodoForm({ initialData, mode, onSubmit, onClose }: UseTodoFor
     const baseData = {
       title: title.trim(),
       description: description.trim() || undefined,
-      location: location.trim() || undefined,
+      manualLocation: manualLocation.trim() || undefined,
+      mapLocation: mapLocation.trim() || undefined,
       executionDateTime,
+      ...(mapCoords.lat && mapCoords.lng ? { latitude: mapCoords.lat, longitude: mapCoords.lng } : {}),
     };
-
     const schema = mode === 'create' ? todoCreateSchema : todoEditSchema;
     const dataToValidate = mode === 'edit' ? { ...baseData, status } : baseData;
 
@@ -82,12 +88,15 @@ export function useTodoForm({ initialData, mode, onSubmit, onClose }: UseTodoFor
 
     onSubmit(result.data);
     onClose();
-  }, [title, description, location, executionDate, executionTime, status, mode, onSubmit, onClose]);
+    console.log(result.data, 'result.data');
+  }, [title, description, manualLocation, mapLocation, mapCoords, executionDate, executionTime, status, mode, onSubmit, onClose]);
 
   return {
     title, setTitle,
     description, setDescription,
-    location, setLocation,
+    manualLocation, setManualLocation,
+    mapLocation, setMapLocation,
+    mapCoords, setMapCoords,
     executionDate, executionTime,
     onDateChange, onTimeChange,
     status: mode === 'edit' ? status : undefined,

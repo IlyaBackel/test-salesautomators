@@ -1,11 +1,14 @@
 import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { ITodo } from '@/src/entities/todo/model/ITodo';
-import { useTodoForm } from '@/src/hooks/useTodoForm';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useTodoForm } from '@/src/shared/lib/hooks/useTodoForm';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Input from '../../../shared/ui/Input';
 import ControlButtonsForm from './ControlButtonsForm';
 import DateTimePickerButton from './DateTimePickerButton';
+import LocationInputWithDropdown from './LocationInputWithDropdown';
+import LocationPickerModal from './LocationPickerModal';
 import StatusSelector from './StatusSelector';
 
 interface TodoFormProps {
@@ -16,11 +19,14 @@ interface TodoFormProps {
 }
 
 export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoFormProps) {
+    const [locationModalVisible, setLocationModalVisible] = useState(false);
     const { colors } = useTheme();
     const {
         title, setTitle,
         description, setDescription,
-        location, setLocation,
+        manualLocation, setManualLocation,
+        mapLocation, setMapLocation,
+        mapCoords, setMapCoords,
         executionDate, executionTime,
         onDateChange, onTimeChange,
         status, setStatus,
@@ -28,6 +34,20 @@ export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoF
     } = useTodoForm({ initialData, mode, onSubmit, onClose });
 
     const titleText = mode === 'create' ? 'New Task' : 'Edit Task';
+
+    const handleLocationSelect = (lat: number, lng: number, addr: string) => {
+        setMapLocation(addr);
+        setMapCoords({ lat, lng });
+    };
+
+    const handleFormSubmit = () => {
+        handleSubmit();
+    };
+
+    // const handleQuickLocationSelect = (loc: string) => {
+    //     setManualLocation(loc);
+    //     if (loc.trim()) dispatch(addLocation(loc));
+    // };
 
     return (
         <View>
@@ -45,12 +65,24 @@ export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoF
                 onChangeText={setDescription}
                 multiline
             />
-            <Input
-                style={styles.input}
-                placeholder="Location"
-                value={location}
-                onChangeText={setLocation}
-                multiline
+
+            <LocationInputWithDropdown
+                value={manualLocation}
+                onChangeText={setManualLocation}
+                placeholder="Manual location (type or select from list)"
+            />
+
+            <TouchableOpacity style={styles.locationButton} onPress={() => setLocationModalVisible(true)}>
+                <Ionicons name="map-outline" size={20} />
+                <Text>{mapLocation || 'Select location on map'}</Text>
+            </TouchableOpacity>
+
+            <LocationPickerModal
+                visible={locationModalVisible}
+                onClose={() => setLocationModalVisible(false)}
+                onSelect={handleLocationSelect}
+                initialLat={mapCoords.lat}
+                initialLng={mapCoords.lng}
             />
             <DateTimePickerButton
                 label="Completion date"
@@ -68,7 +100,7 @@ export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoF
             {mode === 'edit' && status && setStatus && (
                 <StatusSelector status={status} onStatusChange={setStatus} />
             )}
-            <ControlButtonsForm onClose={onClose} onSubmit={handleSubmit} mode={mode} />
+            <ControlButtonsForm onClose={onClose} onSubmit={handleFormSubmit} mode={mode} />
         </View>
     );
 }
@@ -91,5 +123,18 @@ const styles = StyleSheet.create({
     textArea: {
         height: 80,
         textAlignVertical: 'top',
+    },
+    locationButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 12,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 8,
+        marginBottom: 15,
+        gap: 8,
+    },
+    locationButtonText: {
+        fontSize: 16,
     },
 });
