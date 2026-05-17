@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "../store";
 import RootNavigation from "./navigation/RootNavigation";
-import { ThemeProvider } from "./providers/ThemeProvider";
+import ThemeProvider from "./providers/ThemeProvider";
 
 export default function RootLayout() {
   return (

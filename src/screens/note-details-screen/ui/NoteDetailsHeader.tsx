@@ -5,7 +5,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function NoteDetailsHeader({ title }: { title?: string }) {
+export default function NoteDetailsHeader() {
     const insets = useSafeAreaInsets();
     const navigation = useNavigation();
     const { colors } = useTheme(); 
@@ -19,7 +19,7 @@ export default function NoteDetailsHeader({ title }: { title?: string }) {
                 <Ionicons name="arrow-back" size={24} color={colors.TEXT.PRIMARY} />
             </TouchableOpacity>
             <Text style={[styles.title, { color: colors.TEXT.PRIMARY }]} numberOfLines={1}>
-                {title || 'Todo Info'}
+                 Todo Info
             </Text>
             <View style={styles.rightPlaceholder} />
         </View>

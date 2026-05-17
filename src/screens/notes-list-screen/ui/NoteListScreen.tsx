@@ -4,7 +4,6 @@ import { sortTodos } from '@/src/entities/todo/lib/sorts';
 import { TODO_STATUS } from '@/src/entities/todo/model/todo-constants';
 import { TodoModal } from '@/src/features';
 import { RootStackParamList } from '@/src/shared/types/types';
-import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
 import { TodoList } from '@/src/widgets';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -12,6 +11,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { addTodo, changeStatus, deleteTodo } from '../../../entities/todo/model/todoSlice';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 
 export default function NoteListScreen() {
     const dispatch = useAppDispatch();

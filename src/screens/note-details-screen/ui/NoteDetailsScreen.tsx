@@ -1,11 +1,11 @@
 import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { deleteTodo, editTodo } from '@/src/entities/todo/model/todoSlice';
 import { TodoModal } from '@/src/features';
-import { useAppDispatch, useAppSelector } from '@/src/store/hooks';
 import { TodoInfo } from '@/src/widgets';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 
 export default function NoteDetailsScreen() {
     const { colors } = useTheme(); 

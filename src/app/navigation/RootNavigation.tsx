@@ -1,29 +1,78 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useTheme } from '@/src/app/providers/ThemeProvider';
+import { HistoryScreen, HistoryScreenHeader } from '@/src/screens/history-screen';
+import { NoteListHeader, NoteListScreen } from '@/src/screens/notes-list-screen';
+import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NoteDetailsHeader, NoteDetailsScreen } from '../../screens/note-details-screen';
-import { NoteListHeader, NoteListScreen } from "../../screens/notes-list-screen";
-import { RootStackParamList } from "../../shared/types/types";
+import { RootStackParamList, RootTabParamList } from "../../shared/types/types";
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const TodoStack = createNativeStackNavigator<RootStackParamList>();
 
-export default function RootNavigation() {
+function TodoStackScreen() {
+    const { colors } = useTheme();
     return (
-        <Stack.Navigator>
-            <Stack.Screen
+        <TodoStack.Navigator
+            screenOptions={{
+                headerStyle: { backgroundColor: colors.BACKGROUND.HEADER },
+                headerTintColor: colors.TEXT.HEADER_TEXT,
+            }}
+        >
+            <TodoStack.Screen
                 name="Todo List"
                 component={NoteListScreen}
                 options={{
-                    title: 'Todo List',
-                    header: (props) => <NoteListHeader /> ,
+                    header: (props) => <NoteListHeader />,
                 }}
             />
-            <Stack.Screen
+            <TodoStack.Screen
                 name="Todo Info"
                 component={NoteDetailsScreen}
                 options={{
-                    header: (props) => <NoteDetailsHeader title={'Todo Info'} /> ,
-                    headerShown: true,
+                    header: (props) => <NoteDetailsHeader />,
                 }}
             />
-        </Stack.Navigator>
+        </TodoStack.Navigator>
+    );
+}
+
+const Tab = createBottomTabNavigator<RootTabParamList>();
+
+export default function RootNavigation() {
+    const { colors } = useTheme();
+
+    return (
+        <Tab.Navigator
+            screenOptions={{
+                tabBarActiveTintColor: colors.BUTTON.PRIMARY,
+                tabBarInactiveTintColor: colors.TEXT.SECONDARY,
+                tabBarStyle: {
+                    backgroundColor: colors.BACKGROUND.CARD,
+                    borderTopColor: colors.BORDER,
+                },
+                headerShown: false,
+            }}
+        >
+            <Tab.Screen
+                name="Tasks"
+                component={TodoStackScreen}
+                options={{
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Ionicons name={focused ? 'list' : 'list-outline'} size={size} color={color} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="History"
+                component={HistoryScreen}
+                options={{
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Ionicons name={focused ? 'time' : 'time-outline'} size={size} color={color} />
+                    ),
+                    headerShown: true,
+                    header: (props) => <HistoryScreenHeader />,
+                }}
+            />
+        </Tab.Navigator>
     );
 }

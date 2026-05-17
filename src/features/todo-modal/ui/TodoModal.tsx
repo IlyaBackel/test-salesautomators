@@ -1,4 +1,4 @@
-import { useTheme } from '@/src/app/providers/ThemeProvider'; // <-- хук темы
+import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { ITodo } from '@/src/entities/todo/model/ITodo';
 import React from 'react';
 import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';

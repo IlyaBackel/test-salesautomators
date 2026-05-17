@@ -1,31 +1,33 @@
+import historyReducer from '@/src/entities/history/model/historySlice';
+import sortReducer from '@/src/entities/sort/model/sortSlice';
 import todoReducer from '@/src/entities/todo/model/todoSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
-import sortReducer from '../entities/sort/model/sortSlice';
-
+import { historyMiddleware } from './middleware/historyMiddleware';
 
 const rootReducer = combineReducers({
-    todos: todoReducer,
-    sort: sortReducer,   
+  todos: todoReducer,
+  sort: sortReducer,
+  history: historyReducer,
 });
 
 const persistConfig = {
-    key: 'root',
-    storage: AsyncStorage,
-    whitelist: ['todos'],   
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['todos', 'history'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-    reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-            serializableCheck: {
-                ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
-            },
-        }),
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+      },
+    }).concat(historyMiddleware),
 });
 
 export const persistor = persistStore(store);

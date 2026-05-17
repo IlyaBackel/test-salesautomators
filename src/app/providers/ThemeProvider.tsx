@@ -1,6 +1,6 @@
 import { darkColors, lightColors } from '@/src/shared/theme/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createContext, FC, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 
 type Theme = 'light' | 'dark';
@@ -13,7 +13,7 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
+export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useColorScheme();
   const [theme, setTheme] = useState<Theme>(systemScheme === 'dark' ? 'dark' : 'light');
 
