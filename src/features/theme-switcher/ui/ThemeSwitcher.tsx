@@ -18,32 +18,32 @@ export const ThemeSwitcher = () => {
   }, [isDark, translateX]);
 
   return (
-    <TouchableWithoutFeedback style={{ flex: 1 }} onPress={toggleTheme}>
-      <View style={[styles.container, { backgroundColor: colors.BACKGROUND.CARD, borderColor: colors.BORDER }]}>
-        <Animated.View
-          style={[
-            styles.knob,
-            {
-              transform: [{ translateX }],
-              backgroundColor: colors.BUTTON.PRIMARY,
-            },
-          ]}
-        >
-          <Ionicons
-            name={isDark ? 'moon' : 'sunny'}
-            size={20}
-            color={colors.TEXT.HEADER_TEXT}
-          />
-        </Animated.View>
-      </View>
-    </TouchableWithoutFeedback>
+    <View style={{ height: 60, width: 60, justifyContent: 'center' }}>
+      <TouchableWithoutFeedback style={{ flex: 1 }} onPress={toggleTheme}>
+        <View style={[styles.container, { backgroundColor: colors.BACKGROUND.CARD, borderColor: colors.BORDER }]}>
+          <Animated.View
+            style={[
+              styles.knob,
+              {
+                transform: [{ translateX }],
+                backgroundColor: colors.BUTTON.PRIMARY,
+              },
+            ]}
+          >
+            <Ionicons
+              name={isDark ? 'moon' : 'sunny'}
+              size={20}
+              color={colors.TEXT.HEADER_TEXT}
+            />
+          </Animated.View>
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: 32,
     borderRadius: 16,
     borderWidth: 1,
     justifyContent: 'center',

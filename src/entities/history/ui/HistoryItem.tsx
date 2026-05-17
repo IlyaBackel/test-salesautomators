@@ -11,13 +11,13 @@ interface HistoryItemProps {
 const getActionConfig = (action: string) => {
   switch (action) {
     case 'CREATE':
-      return { label: 'Created', color: '#4CAF50' };      // зелёный
+      return { label: 'Created', color: '#4CAF50' };     
     case 'EDIT':
-      return { label: 'Edited', color: '#FFC107' };       // жёлтый
+      return { label: 'Edited', color: '#FFC107' };     
     case 'DELETE':
-      return { label: 'Deleted', color: '#F44336' };      // красный
+      return { label: 'Deleted', color: '#F44336' };      
     case 'TOGGLE_STATUS':
-      return { label: 'Status changed', color: '#2196F3' }; // синий
+      return { label: 'Status changed', color: '#2196F3' };
     default:
       return { label: action, color: '#999' };
   }

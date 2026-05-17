@@ -5,16 +5,15 @@ import { addTodo, changeStatus, deleteTodo, editTodo } from '@/src/entities/todo
 import { isAction, Middleware, PayloadAction } from '@reduxjs/toolkit';
 
 export const historyMiddleware: Middleware = store => next => action => {
-  const result = next(action);
-
   if (!isAction(action)) {
-    return result;
+    return next(action);
   }
 
   const state = store.getState() as { todos: { items: ITodo[] } };
 
   if (action.type === addTodo.type) {
     const payload = (action as PayloadAction<Omit<ITodo, 'creationDate' | 'status'>>).payload;
+    const result = next(action);
     if (payload.id && payload.title) {
       store.dispatch(addHistoryRecord({
         id: Date.now().toString(),
@@ -24,9 +23,10 @@ export const historyMiddleware: Middleware = store => next => action => {
         timestamp: Date.now(),
       }));
     }
+    return result;
   }
 
-  else if (action.type === editTodo.type) {
+  if (action.type === editTodo.type) {
     const payload = (action as PayloadAction<{
       id: string;
       title: string;
@@ -35,6 +35,7 @@ export const historyMiddleware: Middleware = store => next => action => {
       status: TODO_STATUS;
       executionDateTime: number;
     }>).payload;
+    const result = next(action);
     if (payload.id && payload.title) {
       store.dispatch(addHistoryRecord({
         id: Date.now().toString(),
@@ -44,25 +45,29 @@ export const historyMiddleware: Middleware = store => next => action => {
         timestamp: Date.now(),
       }));
     }
+    return result;
   }
 
-  else if (action.type === deleteTodo.type) {
+  if (action.type === deleteTodo.type) {
     const todoId = (action as PayloadAction<string>).payload;
-    const todo = state.todos.items.find((todo: ITodo) => todo.id === todoId);
-    if (todo) {
+    const todoToDelete = state.todos.items.find(t => t.id === todoId);
+    const result = next(action);
+    if (todoToDelete) {
       store.dispatch(addHistoryRecord({
         id: Date.now().toString(),
-        todoId: todo.id,
-        todoTitle: todo.title,
+        todoId: todoToDelete.id,
+        todoTitle: todoToDelete.title,
         action: 'DELETE',
         timestamp: Date.now(),
       }));
     }
+    return result;
   }
 
-  else if (action.type === changeStatus.type) {
+  if (action.type === changeStatus.type) {
     const { id, status } = (action as PayloadAction<{ id: string; status: TODO_STATUS }>).payload;
-    const todo = state.todos.items.find((todo: ITodo) => todo.id === id);
+    const result = next(action);
+    const todo = state.todos.items.find(t => t.id === id);
     if (todo) {
       store.dispatch(addHistoryRecord({
         id: Date.now().toString(),
@@ -73,7 +78,8 @@ export const historyMiddleware: Middleware = store => next => action => {
         timestamp: Date.now(),
       }));
     }
+    return result;
   }
 
-  return result;
+  return next(action);
 };
