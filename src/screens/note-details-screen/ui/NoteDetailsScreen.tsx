@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 
+
 export default function NoteDetailsScreen() {
     const { colors } = useTheme();
     const route = useRoute();
@@ -44,6 +45,7 @@ export default function NoteDetailsScreen() {
             longitude: data.longitude,
             status: data.status,
             executionDateTime: data.executionDateTime,
+            attachments: data.attachments, 
             notificationId: newNotificationId || undefined,
         }));
     };

@@ -1,12 +1,11 @@
 import { useTheme } from '@/src/app/providers/ThemeProvider';
-import { addLocation } from '@/src/entities/location/model/locationsHistorySlice';
 import { ITodo } from '@/src/entities/todo/model/ITodo';
 import { useTodoForm } from '@/src/shared/lib/hooks/useTodoForm';
-import { useAppDispatch } from '@/src/store/hooks';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Input from '../../../shared/ui/Input';
+import AttachmentsPicker from './AttachmentsPicker';
 import ControlButtonsForm from './ControlButtonsForm';
 import DateTimePickerButton from './DateTimePickerButton';
 import LocationInputWithDropdown from './LocationInputWithDropdown';
@@ -33,8 +32,8 @@ export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoF
         onDateChange, onTimeChange,
         status, setStatus,
         handleSubmit,
+        attachments, setAttachments,
     } = useTodoForm({ initialData, mode, onSubmit, onClose });
-    const dispatch = useAppDispatch();
 
     const titleText = mode === 'create' ? 'New Task' : 'Edit Task';
 
@@ -44,16 +43,8 @@ export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoF
     };
 
     const handleFormSubmit = () => {
-        if (manualLocation.trim()) {
-            dispatch(addLocation(manualLocation.trim()));
-        }
         handleSubmit();
     };
-
-    // const handleQuickLocationSelect = (loc: string) => {
-    //     setManualLocation(loc);
-    //     if (loc.trim()) dispatch(addLocation(loc));
-    // };
 
     return (
         <View>
@@ -102,6 +93,11 @@ export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoF
                 value={executionTime}
                 mode="time"
                 onChange={onTimeChange}
+            />
+            <AttachmentsPicker
+                attachments={attachments}
+                onAdd={setAttachments}
+                onRemove={(id) => setAttachments(attachments.filter(a => a.id !== id))}
             />
             {mode === 'edit' && status && setStatus && (
                 <StatusSelector status={status} onStatusChange={setStatus} />

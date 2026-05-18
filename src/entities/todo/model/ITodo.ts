@@ -1,5 +1,5 @@
+import { Attachment } from "@/src/shared/types/types";
 import { TODO_STATUS } from "./todo-constants";
-
 
 export interface ITodo {
   id: string;
@@ -12,6 +12,7 @@ export interface ITodo {
   status: TODO_STATUS;
   creationDate: number;
   executionDateTime: number;
+  attachments?: Attachment[];
   notificationId?: string;
 }
 

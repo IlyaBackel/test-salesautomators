@@ -10,3 +10,11 @@ export type RootTabParamList = {
   History: undefined;
   Map: undefined;
 };
+
+export interface Attachment {
+  id: string;
+  uri: string;
+  name: string;
+  mimeType: string;
+  size?: number;
+}

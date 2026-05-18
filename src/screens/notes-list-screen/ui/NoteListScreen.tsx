@@ -43,6 +43,7 @@ export default function NoteListScreen() {
             latitude: data.latitude,
             longitude: data.longitude,
             executionDateTime: data.executionDateTime,
+            attachments: data.attachments, 
             notificationId: notificationId || undefined,
         }));
     };

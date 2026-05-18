@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { todoCreateSchema, todoEditSchema } from '../../../entities/todo/lib/todoValidation';
 import { ITodo } from '../../../entities/todo/model/ITodo';
 import { TODO_STATUS } from '../../../entities/todo/model/todo-constants';
+import { Attachment } from '../../types/types';
 
 interface UseTodoFormProps {
   initialData?: Partial<ITodo>;
@@ -15,11 +16,11 @@ export function useTodoForm({ initialData, mode, onSubmit, onClose }: UseTodoFor
   const [title, setTitle] = useState(initialData?.title || '');
   const [description, setDescription] = useState(initialData?.description || '');
   const [manualLocation, setManualLocation] = useState(initialData?.manualLocation || '');
-const [mapLocation, setMapLocation] = useState(initialData?.mapLocation || '');
-const [mapCoords, setMapCoords] = useState({
-  lat: initialData?.latitude,
-  lng: initialData?.longitude,
-});
+  const [mapLocation, setMapLocation] = useState(initialData?.mapLocation || '');
+  const [mapCoords, setMapCoords] = useState({
+    lat: initialData?.latitude,
+    lng: initialData?.longitude,
+  });
   const [executionDate, setExecutionDate] = useState(
     initialData?.executionDateTime ? new Date(initialData.executionDateTime) : new Date()
   );
@@ -29,6 +30,7 @@ const [mapCoords, setMapCoords] = useState({
   const [status, setStatus] = useState<TODO_STATUS>(
     (initialData?.status as TODO_STATUS) || TODO_STATUS.ACTIVE
   );
+  const [attachments, setAttachments] = useState<Attachment[]>(initialData?.attachments || []);
 
   const onDateChange = useCallback((event: any, selectedDate?: Date) => {
     if (selectedDate) {
@@ -74,6 +76,7 @@ const [mapCoords, setMapCoords] = useState({
       manualLocation: manualLocation.trim() || undefined,
       mapLocation: mapLocation.trim() || undefined,
       executionDateTime,
+      attachments: attachments.length ? attachments : undefined,
       ...(mapCoords.lat && mapCoords.lng ? { latitude: mapCoords.lat, longitude: mapCoords.lng } : {}),
     };
     const schema = mode === 'create' ? todoCreateSchema : todoEditSchema;
@@ -89,7 +92,7 @@ const [mapCoords, setMapCoords] = useState({
     onSubmit(result.data);
     onClose();
     console.log(result.data, 'result.data');
-  }, [title, description, manualLocation, mapLocation, mapCoords, executionDate, executionTime, status, mode, onSubmit, onClose]);
+  }, [title, description, manualLocation, mapLocation, mapCoords, executionDate, executionTime, status, mode, attachments, onSubmit, onClose]);
 
   return {
     title, setTitle,
@@ -102,5 +105,6 @@ const [mapCoords, setMapCoords] = useState({
     status: mode === 'edit' ? status : undefined,
     setStatus: mode === 'edit' ? setStatus : undefined,
     handleSubmit,
+    attachments, setAttachments
   };
 }
