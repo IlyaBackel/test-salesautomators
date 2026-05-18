@@ -5,10 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Input from '../../../shared/ui/Input';
-import AttachmentsPicker from './AttachmentsPicker';
+import AttachmentsPicker from '../../attachment-picker';
+import DateTimePickerButton from '../../date-time-picker-button';
+import LocationInput, { useLocationHistory } from '../../location-input';
 import ControlButtonsForm from './ControlButtonsForm';
-import DateTimePickerButton from './DateTimePickerButton';
-import LocationInputWithDropdown from './LocationInputWithDropdown';
 import LocationPickerModal from './LocationPickerModal';
 import StatusSelector from './StatusSelector';
 
@@ -34,6 +34,7 @@ export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoF
         handleSubmit,
         attachments, setAttachments,
     } = useTodoForm({ initialData, mode, onSubmit, onClose });
+    const { addToHistory } = useLocationHistory();
 
     const titleText = mode === 'create' ? 'New Task' : 'Edit Task';
 
@@ -43,6 +44,10 @@ export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoF
     };
 
     const handleFormSubmit = () => {
+        if (manualLocation.trim()) {
+            addToHistory(manualLocation.trim());
+        }
+
         handleSubmit();
     };
 
@@ -63,7 +68,7 @@ export default function TodoForm({ mode, initialData, onSubmit, onClose }: TodoF
                 multiline
             />
 
-            <LocationInputWithDropdown
+            <LocationInput
                 value={manualLocation}
                 onChangeText={setManualLocation}
                 placeholder="Manual location (type or select from list)"

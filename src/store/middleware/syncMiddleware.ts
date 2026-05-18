@@ -5,28 +5,24 @@ import { addTodo, deleteTodo, editTodo } from '@/src/entities/todo/model/todoSli
 import { todoApi } from '@/src/shared/api/todoApi';
 import { isAction, Middleware, PayloadAction } from '@reduxjs/toolkit';
 import * as Network from 'expo-network';
-import { store } from '..';
+import { AppDispatch, RootState } from '..';
 
 let isOnline = false;
 
-const checkConnection = async () => {
+const checkConnection = async (dispatch: AppDispatch, getState: () => RootState) => {
   const state = await Network.getNetworkStateAsync();
   const wasOnline = isOnline;
   isOnline = state.isConnected ?? false;
   if (isOnline && !wasOnline) {
-    syncQueue(); 
+    syncQueue(dispatch, getState);
   }
 };
 
-setInterval(checkConnection, 5000);
-checkConnection();
-
-async function syncQueue() {
-  const state = store.getState();
-  const queue = state.syncQueue.queue;
+const syncQueue = async (dispatch: AppDispatch, getState: () => RootState) => {
+  const queue = getState().syncQueue.queue;
   if (queue.length === 0) return;
 
-  store.dispatch(setSyncing(true));
+  dispatch(setSyncing(true));
   for (const action of queue) {
     try {
       switch (action.type) {
@@ -40,22 +36,27 @@ async function syncQueue() {
           await todoApi.delete(action.payload);
           break;
       }
-      store.dispatch(removeAction(action.id));
+      dispatch(removeAction(action.id));
     } catch (error) {
       console.error('Sync failed for action', action.id, error);
     }
   }
-  store.dispatch(setSyncing(false));
-}
+  dispatch(setSyncing(false));
+};
 
 export const syncMiddleware: Middleware = storeAPI => next => action => {
   const result = next(action);
+  const { dispatch, getState } = storeAPI;
+
   if (!isAction(action)) return result;
+
+  setInterval(() => checkConnection(dispatch, getState), 5000);
+  checkConnection(dispatch, getState);
 
   if (!isOnline) {
     if (action.type === addTodo.type) {
       const payload = (action as PayloadAction<Omit<ITodo, 'creationDate' | 'status'>>).payload;
-      storeAPI.dispatch(enqueueAction({
+      dispatch(enqueueAction({
         id: Date.now().toString(),
         type: 'ADD',
         payload,
@@ -75,7 +76,7 @@ export const syncMiddleware: Middleware = storeAPI => next => action => {
         notificationId?: string;
         attachments?: any[];
       }>).payload;
-      storeAPI.dispatch(enqueueAction({
+      dispatch(enqueueAction({
         id: Date.now().toString(),
         type: 'UPDATE',
         payload,
@@ -83,7 +84,7 @@ export const syncMiddleware: Middleware = storeAPI => next => action => {
       }));
     } else if (action.type === deleteTodo.type) {
       const payload = (action as PayloadAction<string>).payload;
-      storeAPI.dispatch(enqueueAction({
+      dispatch(enqueueAction({
         id: Date.now().toString(),
         type: 'DELETE',
         payload,
@@ -91,5 +92,6 @@ export const syncMiddleware: Middleware = storeAPI => next => action => {
       }));
     }
   }
+
   return result;
 };

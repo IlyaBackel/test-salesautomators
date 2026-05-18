@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
-import LocationPicker from './LocationPicker';
+import LocationPicker from '../../location-picker';
 
 interface Props {
   visible: boolean;
