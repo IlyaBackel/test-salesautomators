@@ -17,20 +17,20 @@ export default function LocationInputWithDropdown({ value, onChangeText, placeho
   const history = useAppSelector(state => state.locationHistory.items);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  const handleSelect = (item: string) => {
-    onChangeText(item);
-    setDropdownVisible(false);
-  };
-
-  const handleBlur = () => {
-    if (value.trim()) {
-      dispatch(addLocation(value.trim()));
+  const addToHistory = (text: string) => {
+    const trimmed = text.trim();
+    if (trimmed) {
+      dispatch(addLocation(trimmed));
     }
   };
 
-  const historyToShow = history.slice(0, 10);
+  const handleSelect = (item: string) => {
+    onChangeText(item);
+    addToHistory(item); 
+    setDropdownVisible(false);
+  };
 
-  console.log(history);
+  const historyToShow = history.slice(0, 10);
 
   return (
     <View style={styles.container}>
@@ -41,7 +41,6 @@ export default function LocationInputWithDropdown({ value, onChangeText, placeho
           placeholderTextColor={colors.TEXT.PLACEHOLDER}
           value={value}
           onChangeText={onChangeText}
-          onBlur={handleBlur}
         />
         <TouchableOpacity onPress={() => setDropdownVisible(true)} style={styles.iconButton}>
           <Ionicons name="chevron-down" size={20} color={colors.TEXT.SECONDARY} />

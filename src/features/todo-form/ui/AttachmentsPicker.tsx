@@ -32,7 +32,6 @@ export default function AttachmentsPicker({ attachments, onAdd, onRemove }: Prop
         });
         if (!result.canceled && result.assets[0]) {
             const asset = result.assets[0];
-            // Копируем в постоянное хранилище (на случай, если URI временный)
             const finalUri = await copyToPermanentStorage(asset.uri, asset.fileName || `image_${Date.now()}.jpg`);
             const newAttachment: Attachment = {
                 id: Date.now().toString(),
@@ -48,11 +47,10 @@ export default function AttachmentsPicker({ attachments, onAdd, onRemove }: Prop
     const pickDocument = async () => {
         const result = await DocumentPicker.getDocumentAsync({
             type: '*/*',
-            copyToCacheDirectory: true, // временная копия
+            copyToCacheDirectory: true, 
         });
         if (result.assets && result.assets[0]) {
             const doc = result.assets[0];
-            // Для изображений тоже копируем в постоянное хранилище
             let finalUri = doc.uri;
             if (doc.mimeType && doc.mimeType.startsWith('image/')) {
                 finalUri = await copyToPermanentStorage(doc.uri, doc.name);

@@ -21,7 +21,9 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.ilyabatskel.testsalesautomators"
+      "package": "com.ilyabatskel.testsalesautomators",
+      "useNextNotificationsApi": true,
+      "permissions": ["android.permission.USE_EXACT_ALARM"]
     },
     "web": {
       "output": "static",

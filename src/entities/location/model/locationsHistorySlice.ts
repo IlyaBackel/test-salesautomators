@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const MAX_HISTORY = 10;
-
 interface LocationsHistoryState {
   items: string[];
 }
@@ -18,7 +16,7 @@ const locationsHistorySlice = createSlice({
       const location = action.payload.trim();
       if (!location) return;
       const filtered = state.items.filter(item => item !== location);
-      state.items = [location, ...filtered].slice(0, MAX_HISTORY);
+      state.items = [location, ...filtered];
     },
     clearHistory: (state) => {
       state.items = [];

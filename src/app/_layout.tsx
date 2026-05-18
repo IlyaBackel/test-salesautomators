@@ -1,18 +1,17 @@
-import { useEffect } from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { requestNotificationPermissions } from "../shared/lib/notifications";
-import { persistor, store } from "../store";
-import RootNavigation from "./navigation/RootNavigation";
-import ThemeProvider from "./providers/ThemeProvider";
+import RootNavigation from '@/src/app/navigation/RootNavigation';
+import { requestNotificationPermissions } from '@/src/shared/lib/notifications';
+import React, { useEffect } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor, store } from '../store';
+import ThemeProvider from './providers/ThemeProvider';
 
 export default function RootLayout() {
-
   useEffect(() => {
     requestNotificationPermissions();
   }, []);
-  
+
   return (
     <SafeAreaProvider>
       <Provider store={store}>
@@ -23,5 +22,5 @@ export default function RootLayout() {
         </PersistGate>
       </Provider>
     </SafeAreaProvider>
-  )
+  );
 }

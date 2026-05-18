@@ -28,24 +28,26 @@ export async function scheduleTodoNotification(todo: {
   title: string;
   executionDateTime: number;
 }): Promise<string | undefined> {
+  console.log(todo.executionDateTime, 'time todo')
   const eventDate = new Date(todo.executionDateTime);
-  const triggerDate = new Date(eventDate.getTime() - 1 * 60 * 1000);
+  const triggerDate = new Date(eventDate.getTime() - 30 * 60 * 1000);
 
   if (triggerDate <= new Date()) {
     console.log('Notification time is in the past, not scheduling');
     return undefined;
   }
-  const seconds = Math.floor((triggerDate.getTime() - Date.now()) / 1000);
+
   try{
     const notificationId = await Notifications.scheduleNotificationAsync({
     content: {
         title: 'Task reminder',
         body: `"${todo.title}" will be due in 30 minutes`,
         data: { todoId: todo.id },
+        channelId: 'reminders',
       },
       trigger: {
-        seconds: seconds,
-        type: 'timeInterval',
+        type: 'date',
+        date: triggerDate,
       },
     });
     console.log(`Notification scheduled for task ${todo.id} with ID ${notificationId}`);
