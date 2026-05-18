@@ -1,11 +1,18 @@
+import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { requestNotificationPermissions } from "../shared/lib/notifications";
 import { persistor, store } from "../store";
 import RootNavigation from "./navigation/RootNavigation";
 import ThemeProvider from "./providers/ThemeProvider";
 
 export default function RootLayout() {
+
+  useEffect(() => {
+    requestNotificationPermissions();
+  }, []);
+  
   return (
     <SafeAreaProvider>
       <Provider store={store}>

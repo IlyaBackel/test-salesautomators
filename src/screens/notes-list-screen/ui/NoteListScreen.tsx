@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { addTodo, changeStatus, deleteTodo } from '../../../entities/todo/model/todoSlice';
+import { cancelNotification, scheduleTodoNotification } from '../../../shared/lib/notifications';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 
 export default function NoteListScreen() {
@@ -26,9 +27,15 @@ export default function NoteListScreen() {
 
     const sortedTodos = sortTodos(todos, activeSort, direction);
 
-    const handleCreate = (data: any) => {
+    const handleCreate = async (data: any) => {
+        const newId = Date.now().toString();
+        const notificationId = await scheduleTodoNotification({
+            id: newId,
+            title: data.title,
+            executionDateTime: data.executionDateTime,
+        });
         dispatch(addTodo({
-            id: Date.now().toString(),
+            id: newId,
             title: data.title,
             description: data.description,
             manualLocation: data.manualLocation,
@@ -36,14 +43,20 @@ export default function NoteListScreen() {
             latitude: data.latitude,
             longitude: data.longitude,
             executionDateTime: data.executionDateTime,
+            notificationId: notificationId || undefined,
         }));
     };
 
-    const handleToggleStatus = (id: string, currentStatus: TODO_STATUS) => {
+    const handleToggleStatus = async (id: string, currentStatus: TODO_STATUS) => {
+        const todo = todos.find(t => t.id === id);
         let newStatus: TODO_STATUS;
         if (currentStatus === TODO_STATUS.ACTIVE) newStatus = TODO_STATUS.COMPLETED;
         else if (currentStatus === TODO_STATUS.COMPLETED) newStatus = TODO_STATUS.ACTIVE;
         else return;
+
+        if (newStatus !== TODO_STATUS.ACTIVE && todo?.notificationId) {
+            await cancelNotification(todo.notificationId);
+        }
         dispatch(changeStatus({ id, status: newStatus }));
     };
 
@@ -74,9 +87,7 @@ export default function NoteListScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
+    container: { flex: 1 },
     fab: {
         position: 'absolute',
         bottom: 24,

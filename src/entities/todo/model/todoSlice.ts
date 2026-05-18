@@ -35,6 +35,7 @@ const todosSlice = createSlice({
       longitude?: number;
       status: TODO_STATUS;
       executionDateTime: number;
+      notificationId?: string;
     }>) => {
       const { id, ...updates } = action.payload;
       const todo = state.items.find(todo => todo.id === id);

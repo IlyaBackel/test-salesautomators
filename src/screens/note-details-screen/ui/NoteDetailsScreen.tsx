@@ -1,6 +1,7 @@
 import { useTheme } from '@/src/app/providers/ThemeProvider';
 import { deleteTodo, editTodo } from '@/src/entities/todo/model/todoSlice';
 import { TodoModal } from '@/src/features';
+import { cancelNotification, scheduleTodoNotification } from '@/src/shared/lib/notifications';
 import { TodoInfo } from '@/src/widgets';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
@@ -24,19 +25,28 @@ export default function NoteDetailsScreen() {
         );
     }
 
-    const handleUpdate = (data: any) => {
-  dispatch(editTodo({
-    id: noteId,
-    title: data.title,
-    description: data.description,
-    manualLocation: data.manualLocation,
-    mapLocation: data.mapLocation,
-    latitude: data.latitude,
-    longitude: data.longitude,
-    status: data.status,
-    executionDateTime: data.executionDateTime,
-  }));
-};
+    const handleUpdate = async (data: any) => {
+        if (todo.notificationId) {
+            await cancelNotification(todo.notificationId);
+        }
+        const newNotificationId = await scheduleTodoNotification({
+            id: noteId,
+            title: data.title,
+            executionDateTime: data.executionDateTime,
+        });
+        dispatch(editTodo({
+            id: noteId,
+            title: data.title,
+            description: data.description,
+            manualLocation: data.manualLocation,
+            mapLocation: data.mapLocation,
+            latitude: data.latitude,
+            longitude: data.longitude,
+            status: data.status,
+            executionDateTime: data.executionDateTime,
+            notificationId: newNotificationId || undefined,
+        }));
+    };
 
     const handleDelete = () => {
         Alert.alert('Delete task?', 'This action cannot be undone', [
@@ -44,7 +54,10 @@ export default function NoteDetailsScreen() {
             {
                 text: 'Delete',
                 style: 'destructive',
-                onPress: () => {
+                onPress: async () => {
+                    if (todo.notificationId) {
+                        await cancelNotification(todo.notificationId);
+                    }
                     dispatch(deleteTodo(noteId));
                     navigation.goBack();
                 },

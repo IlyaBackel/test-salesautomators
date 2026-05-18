@@ -3,7 +3,7 @@ import { ITodo } from '@/src/entities/todo/model/ITodo';
 import { formatExecutionDateTime } from '@/src/shared/lib/date';
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import MapView, { Marker, Region } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { useAppSelector } from '../../../store/hooks';
 
 const DEFAULT_REGION: Region = {
@@ -46,6 +46,7 @@ export default function MapScreen() {
                 ref={mapRef}
                 style={styles.map}
                 initialRegion={DEFAULT_REGION}
+                provider={PROVIDER_GOOGLE}
                 showsUserLocation
                 showsMyLocationButton
             >

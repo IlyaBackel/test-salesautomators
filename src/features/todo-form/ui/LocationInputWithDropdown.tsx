@@ -30,6 +30,8 @@ export default function LocationInputWithDropdown({ value, onChangeText, placeho
 
   const historyToShow = history.slice(0, 10);
 
+  console.log(history);
+
   return (
     <View style={styles.container}>
       <View style={[styles.inputContainer, { borderColor: colors.BORDER, backgroundColor: colors.BACKGROUND.CARD }]}>

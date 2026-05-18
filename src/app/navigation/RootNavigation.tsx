@@ -5,7 +5,10 @@ import MapScreen from '@/src/screens/map-screen/ui/MapScreen';
 import { NoteListHeader, NoteListScreen } from '@/src/screens/notes-list-screen';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as Notifications from 'expo-notifications';
+import React, { useEffect } from 'react';
 import { NoteDetailsHeader, NoteDetailsScreen } from '../../screens/note-details-screen';
 import { RootStackParamList, RootTabParamList } from "../../shared/types/types";
 
@@ -42,6 +45,17 @@ const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export default function RootNavigation() {
     const { colors } = useTheme();
+    const navigation = useNavigation<any>();
+
+    useEffect(() => {
+        const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+            const todoId = response.notification.request.content.data?.todoId;
+            if (todoId) {
+                navigation.navigate('Todo Info', { noteId: todoId });
+            }
+        });
+        return () => subscription.remove();
+    }, [navigation]);
 
     return (
         <Tab.Navigator

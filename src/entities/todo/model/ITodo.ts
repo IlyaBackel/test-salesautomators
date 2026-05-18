@@ -12,6 +12,7 @@ export interface ITodo {
   status: TODO_STATUS;
   creationDate: number;
   executionDateTime: number;
+  notificationId?: string;
 }
 
 export type ActiveSort = "byDate" | "byTitle" | "byStatus";
